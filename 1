@@ -1,92 +1,10 @@
-{
-  "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Creates a Lookup function that can lookup output values from another stack",
 
-  "": {
-    "LookupStackOutputs": {
-      "Type": "AWS::Lambda::Function",
-      "Properties": {
-        "Handler": "index.handler",
-        "FunctionName": "LookupStackOutputs",
-        "Role": { "Fn::GetAtt" : ["LambdaExecutionRole", "Arn"] },
-        "Code": {
-          "ZipFile":  { "Fn::Join": ["\n", [
-            "var response = require('cfn-response');",
-            "exports.handler = function(event, context) {",
-            "    console.log('REQUEST RECEIVED:\\n', JSON.stringify(event));",
-            "    if (event.RequestType == 'Delete') {",
-            "        response.send(event, context, response.SUCCESS);",
-            "        return;",
-            "    }",
-            "    var stackName = event.ResourceProperties.StackName;",
-            "    var responseData = {};",
-            "    if (stackName) {",
-            "        var aws = require('aws-sdk');",
-            "        var cfn = new aws.CloudFormation();",
-            "        cfn.describeStacks({StackName: stackName}, function(err, data) {",
-            "            if (err) {",
-            "                responseData = {Error: 'DescribeStacks call failed'};",
-            "                console.log(responseData.Error + ':\\n', err);",
-            "                response.send(event, context, response.FAILED, responseData);",
-            "            }",
-            "            else {",
-            "                data.Stacks[0].Outputs.forEach(function(output) {",
-            "                    responseData[output.OutputKey] = output.OutputValue;",
-            "                });",
-            "                response.send(event, context, response.SUCCESS, responseData);",
-            "            }",
-            "        });",
-            "    } else {",
-            "        responseData = {Error: 'Stack name not specified'};",
-            "        console.log(responseData.Error);",
-            "        response.send(event, context, response.FAILED, responseData);",
-            "    }",
-            "};"
-          ]]}
-        },
-        "Runtime": "nodejs4.3",
-        "Timeout": "30"
-      }
-    },
-
-    "LambdaExecutionRole": {
-      "Type": "AWS::IAM::Role",
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [{
-            "Effect": "Allow",
-            "Principal": {"Service": ["lambda.amazonaws.com"]},
-            "Action": ["sts:AssumeRole"]
-          }]
-        },
-        "Path": "/",
-        "Policies": [{
-          "PolicyName": "root",
-          "PolicyDocument": {
-            "Version": "2012-10-17",
-            "Statement": [
-              {
-              "Effect": "Allow",
-              "Action": ["logs:CreateLogGroup","logs:CreateLogStream","logs:PutLogEvents"],
-              "Resource": "arn:aws:logs:*:*:*"
-              },
-              {
-                "Effect": "Allow",
-                "Action": ["cloudformation:DescribeStacks"],
-                "Resource": "*"
-              }
-            ]
-          }
-        }]
-      }
-    }
-  },
-  "Outputs": {
-    "LambdaLookupArn": {
-      "Description": "ARN for lookup function that can take a stack name",
-      "Value": { "Fn::GetAtt" : ["LookupStackOutputs", "Arn"] }
-    }
-  }
-}
-    
+deleting file 1 
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch is up-to-date with 'origin/master'.
+#
+# Changes to be committed:
+#	deleted:    1
+#
